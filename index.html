@@ -14,7 +14,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-image: url('poker_background.jpg'); /* Replace with your image path */
+            background-image: url('poker_background.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -47,7 +47,6 @@
             line-height: 1.5;
         }
 
-        /* Tab Styling */
         .tab-container {
             display: flex;
             justify-content: center;
@@ -69,7 +68,6 @@
             color: #fff;
         }
 
-        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -100,54 +98,12 @@
         .rank-2 { color: #C0C0C0; font-weight: bold; }
         .rank-3 { color: #8c6a54; font-weight: bold; }
 
-
-        /* Hide tables by default */
-        #score-table, #popularity-table{
+        #score-table, #popularity-table {
             display: none;
         }
 
-        #score-table.active-table, #popularity-table.active-table{
+        #score-table.active-table, #popularity-table.active-table {
             display: table;
-        }
-
-        /* Styles for the Random Draw Section */
-        #random-draw-section {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        #draw-button {
-            background-color: #60a5fa;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            margin-bottom: 10px;
-        }
-          #draw-button:hover{
-            background-color: #4183d7;
-        }
-
-        #draw-results {
-            font-size: 1.2em;
-            color: #FFD700;
-            font-weight: bold;
-            min-height: 24px;
-        }
-        .winners-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .winner-item {
-            background-color: rgba(96, 165, 250, 0.3);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
         }
     </style>
 </head>
@@ -155,8 +111,8 @@
     <div id="leaderboard">
         <h1>ASOP SNG 争霸榜</h1>
         <p class="description">
-            第一名5分 第二名3分 第三名2分 </br>
-            低买入比赛按奖金比例折扣积分 </br>
+            第一名5分 第二名3分 第三名2分<br>
+            低买入比赛按奖金比例折扣积分<br>
             总成绩为选手比赛成绩，抽奖分数用于选取玩家参加freeroll
         </p>
 
@@ -173,10 +129,9 @@
                     <th>Score</th>
                 </tr>
             </thead>
-            <tbody id="score-table-body">
-                </tbody>
+            <tbody id="score-table-body"></tbody>
         </table>
-        
+
         <table id="popularity-table">
             <thead>
                 <tr>
@@ -185,122 +140,65 @@
                     <th>Votes</th>
                 </tr>
             </thead>
-            <tbody id="popularity-table-body">
-                </tbody>
+            <tbody id="popularity-table-body"></tbody>
         </table>
-        <!--
-        <div id="random-draw-section">
-            <h2>随机抽奖</h2>
-            <button id="draw-button">抽取幸运玩家</button>
-            <div id="draw-results"></div>
-        </div>
-        -->
     </div>
 
     <script>
-        const scoreData = [
-            { name: "Alan Du", score: 14 },
-            { name: "Chang Luo", score: 7 },
-            { name: "Chang Liu", score: 11 },
-            { name: "Alan Wang", score: 0 },
-            { name: "Jack Min", score: 12 },
-            { name: "Alex Zhang", score: 13 },
-            { name: "Daniel Meng", score: 5 },
-            { name: "Jay Zhou", score: 0 },
-            { name: "Bin Duan", score: 13.5 },
-            { name: "Leo Zhu", score: 15.5 },
-            { name: "Jade Park", score: 7 },
-            { name: "Jun Yuan", score: 17 },
-            { name: "Marvin Zhan", score: 3 },
-            { name: "Haoyu Chen", score: 6 },
-            { name: "John Yu", score: 8 },
-            { name: "Fred Wang", score: 0 },
-            { name: "Jie Zhao", score: 0 },
-            { name: "Tao Qin", score: 0 },
-            { name: "Michael Huang", score: 0 },
-            { name: "Benson He", score: 3 },
-            { name: "Nathan Lu", score: 0 },
-            { name: "Eva Huang", score: 0 },
-            { name: "William Dai", score: 4 },
-            { name: "Cecilia Xiao", score: 1 },
-            { name: "Zhannan Ge", score: 2 },
-            { name: "Hao Cheng", score: 0 },
-            { name: "Vincent Hu", score: 5 },
-            { name: "Tom He", score: 0 },
-            { name: "Wenzhao", score: 6 },
-            { name: "Siyuan", score: 2 },
-            
-        ];
+        const sheetId = "1k0TNIqThfUwpLQibxtOrZFi_0mioAZxta2Y-V91dvsg";
+        const sheetName = "Leaderboard";
+        const query = encodeURIComponent("SELECT A, B, C");
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?sheet=${sheetName}&tq=${query}`;
 
-        const popularityData = [
-            { name: "Alan Du", votes: 32 },
-            { name: "Chang Luo", votes: 29 },
-            { name: "Chang Liu", votes: 25 },
-            { name: "Alan Wang", votes: 6 },
-            { name: "Jack Min", votes: 42 },
-            { name: "Alex Zhang", votes: 23 },
-            { name: "Daniel Meng", votes: 39 },
-            { name: "Jay Zhou", votes: 1 },
-            { name: "Bin Duan", votes: 37.5 },
-            { name: "Leo Zhu", votes: 31 },
-            { name: "Jade Park", votes: 23 },
-            { name: "Jun Yuan", votes: 17 },
-            { name: "Marvin Zhan", votes: 11 },
-            { name: "Haoyu Chen", votes: 22 },
-            { name: "John Yu", votes: 15 },
-            { name: "Fred Wang", votes: 6 },
-            { name: "Zhao Jie", votes: 5 },
-            { name: "Tao Qin", votes: 3 },
-            { name: "Michael Huang", votes: 2 },
-            { name: "Benson He", votes: 6 },
-            { name: "Nathan Lu", votes: 1 },
-            { name: "Eva Huang", votes: 4 },
-            { name: "William Dai", votes: 12 },
-            { name: "Cecilia Xiao", votes: 1 },
-            { name: "Zhannan Ge", votes: 6.5 },
-            { name: "Hao Cheng", votes: 0.5 },
-            { name: "Vincent Hu", votes: 8 },
-            { name: "Tom He", votes: 3 },
-            { name: "Ji Hong", votes: 3},
-            { name: "Wenchao", votes: 4}
-        ];
+        fetch(url)
+            .then(res => res.text())
+            .then(rep => {
+                const data = JSON.parse(rep.substring(47).slice(0, -2));
+                const rows = data.table.rows;
 
-        scoreData.sort((a, b) => b.score - a.score);
-        popularityData.sort((a,b) => b.votes - a.votes);
+                const scoreData = [];
+                const popularityData = [];
 
-        const scoreTableBody = document.getElementById("score-table-body");
-        const popularityTableBody = document.getElementById("popularity-table-body");
+                rows.forEach(row => {
+                    const name = row.c[0]?.v || "";
+                    const score = parseFloat(row.c[1]?.v || 0);
+                    const votes = parseFloat(row.c[2]?.v || 0);
+                    scoreData.push({ name, score });
+                    popularityData.push({ name, votes });
+                });
 
-        function generateTableRows(data, tbody, scoreOrVotes) {
+                scoreData.sort((a, b) => b.score - a.score);
+                popularityData.sort((a, b) => b.votes - a.votes);
+
+                generateTableRows(scoreData, document.getElementById("score-table-body"), "score");
+                generateTableRows(popularityData, document.getElementById("popularity-table-body"), "votes");
+            });
+
+        function generateTableRows(data, tbody, field) {
             tbody.innerHTML = "";
-            for (let i = 0; i < data.length; i++) {
+            data.forEach((item, index) => {
                 const row = document.createElement("tr");
                 const rankCell = document.createElement("td");
                 const nameCell = document.createElement("td");
                 const valueCell = document.createElement("td");
 
-                rankCell.textContent = i + 1;
-                nameCell.textContent = data[i].name;
-                valueCell.textContent = data[i][scoreOrVotes];
+                rankCell.textContent = index + 1;
+                nameCell.textContent = item.name;
+                valueCell.textContent = item[field];
 
-                if (i < 10) {
+                if (index < 10) {
                     row.classList.add("top-rank");
-                    if(i === 0) rankCell.classList.add("rank-1");
-                    if(i === 1) rankCell.classList.add("rank-2");
-                    if(i === 2) rankCell.classList.add("rank-3");
+                    if (index === 0) rankCell.classList.add("rank-1");
+                    if (index === 1) rankCell.classList.add("rank-2");
+                    if (index === 2) rankCell.classList.add("rank-3");
                 }
 
                 row.appendChild(rankCell);
                 row.appendChild(nameCell);
                 row.appendChild(valueCell);
                 tbody.appendChild(row);
-            }
+            });
         }
-        // --- Populate tables and set initial visibility ---
-        generateTableRows(scoreData, scoreTableBody, "score");
-        generateTableRows(popularityData, popularityTableBody, "votes");
-        document.getElementById("score-table").classList.add("active-table"); // Show "总成绩" on load
-
 
         const tabs = document.querySelectorAll(".tab");
         tabs.forEach(tab => {
@@ -311,76 +209,8 @@
                 tab.classList.add("active");
                 const tabId = tab.dataset.tab;
                 document.getElementById(tabId).classList.add("active-table");
-
             });
         });
-
-        // --- Random Draw Logic ---
-        function weightedRandomDraw(items, weights, count) {
-            const selected = [];
-            const availableItems = [...items];
-            const availableWeights = [...weights];
-
-            while (selected.length < count && availableItems.length > 0) {
-                const winnerIndex = weightedRandomIndex(availableItems, availableWeights);
-                if (winnerIndex !== -1) {
-                    selected.push(availableItems[winnerIndex]);
-                    availableItems.splice(winnerIndex, 1);
-                    availableWeights.splice(winnerIndex, 1);
-                } else {
-                    break;
-                }
-
-            }
-            return selected;
-        }
-
-        function weightedRandomIndex(items, weights) {
-            const cumulativeWeights = [];
-            let cumulativeSum = 0;
-            for (let i = 0; i < weights.length; i++) {
-                cumulativeSum += weights[i];
-                cumulativeWeights.push(cumulativeSum);
-            }
-
-            const totalWeight = cumulativeWeights[cumulativeWeights.length - 1];
-            if(totalWeight <= 0) {
-                return -1;
-            }
-            const randomNumber = Math.random() * totalWeight;
-
-            for (let i = 0; i < items.length; i++) {
-                if (randomNumber < cumulativeWeights[i]) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        const drawButton = document.getElementById("draw-button");
-        const drawResultsDiv = document.getElementById("draw-results");
-
-        drawButton.addEventListener("click", () => {
-            const names = popularityData.map(item => item.name);
-            const votes = popularityData.map(item => item.votes);
-
-            const winners = weightedRandomDraw(names, votes, 9);
-              drawResultsDiv.innerHTML = ""; // Clear previous results.
-            if(winners.length > 0) {
-                const winnersList = document.createElement("div");
-                winnersList.classList.add("winners-list"); // for styling
-                winners.forEach(winner => {
-                    const winnerItem = document.createElement("div");
-                    winnerItem.textContent = winner;
-                    winnerItem.classList.add("winner-item"); // for styling
-                    winnersList.appendChild(winnerItem);
-                })
-                drawResultsDiv.appendChild(winnersList);
-            } else {
-                drawResultsDiv.textContent = "没有符合条件的玩家参与抽奖."
-            }
-        });
-
     </script>
 </body>
 </html>
