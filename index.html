@@ -175,30 +175,45 @@
             });
 
         function generateTableRows(data, tbody, field) {
-            tbody.innerHTML = "";
-            data.forEach((item, index) => {
-                const row = document.createElement("tr");
-                const rankCell = document.createElement("td");
-                const nameCell = document.createElement("td");
-                const valueCell = document.createElement("td");
+    tbody.innerHTML = "";
 
-                rankCell.textContent = index + 1;
-                nameCell.textContent = item.name;
-                valueCell.textContent = item[field];
+    let rank = 1;
+    let prevValue = null;
+    let displayRank = 1;
 
-                if (index < 10) {
-                    row.classList.add("top-rank");
-                    if (index === 0) rankCell.classList.add("rank-1");
-                    if (index === 1) rankCell.classList.add("rank-2");
-                    if (index === 2) rankCell.classList.add("rank-3");
-                }
+    data.forEach((item, index) => {
+        const row = document.createElement("tr");
+        const rankCell = document.createElement("td");
+        const nameCell = document.createElement("td");
+        const valueCell = document.createElement("td");
 
-                row.appendChild(rankCell);
-                row.appendChild(nameCell);
-                row.appendChild(valueCell);
-                tbody.appendChild(row);
-            });
+        const currentValue = item[field];
+
+        if (prevValue !== null && currentValue < prevValue) {
+            rank = displayRank;
         }
+
+        rankCell.textContent = rank;
+        nameCell.textContent = item.name;
+        valueCell.textContent = currentValue;
+
+        // 高亮前10名
+        if (rank <= 10) {
+            row.classList.add("top-rank");
+            if (rank === 1) rankCell.classList.add("rank-1");
+            if (rank === 2) rankCell.classList.add("rank-2");
+            if (rank === 3) rankCell.classList.add("rank-3");
+        }
+
+        row.appendChild(rankCell);
+        row.appendChild(nameCell);
+        row.appendChild(valueCell);
+        tbody.appendChild(row);
+
+        prevValue = currentValue;
+        displayRank += 1;
+    });
+}
 
         const tabs = document.querySelectorAll(".tab");
         tabs.forEach(tab => {
